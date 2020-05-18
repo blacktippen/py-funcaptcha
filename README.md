@@ -44,3 +44,5 @@ for image, submit in ch.get_iter():
 ## Print final result
 print("Solved ::", solved)
 ```
+
+If you have any questions, suggestions or offers, feel free to message me on twitter at [@h0nde](https://twitter.com/h0nde).

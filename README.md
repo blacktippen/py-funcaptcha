@@ -1,5 +1,5 @@
 # py-funcaptcha
-Python module for interacting with ArkoseLabs' FunCaptcha
+Python module for interacting with ArkoseLabs' FunCaptcha. NOT A SOLVER IN ITSELF.
 
 ### Things to note
 - `<ch>.full_token` is the token you submit to the website once you solved the challenge

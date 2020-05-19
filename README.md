@@ -37,7 +37,7 @@ print("Number of Images ::", len(ch.image_urls))
 ## image is PIL.Image object
 for image, submit in ch.get_iter():
     ## Generate random guess
-    guess = ch.angle * randint(1, 360/ch.angle)
+    guess = ch.angle * randint(1, int(360/ch.angle))
     ## Submit guess
     solved = submit(guess)
 

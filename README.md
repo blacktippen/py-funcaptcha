@@ -30,19 +30,19 @@ s = FunCaptchaSession(
 ch = s.new_challenge()
 
 ## Print challenge details
-print("Full Token ::", ch.full_token)
-print("Number of Images ::", len(ch.image_urls))
+print("Full Token:", ch.full_token)
+print("Number of Images:", len(ch.image_urls))
 
 ## Iterate over challenge images
 ## image is PIL.Image object
 for image, submit in ch.get_iter():
     ## Generate random guess
-    guess = ch.angle * randint(1, int(360/ch.angle))
+    guess = ch.angle * randint(1, int(360/ch.angle) - 1)
     ## Submit guess
     solved = submit(guess)
 
 ## Print final result
-print("Solved ::", solved)
+print("Solved:", solved)
 ```
 
 If you have any questions, suggestions or offers, feel free to message me on twitter at [@h0nde](https://twitter.com/h0nde).

@@ -263,7 +263,7 @@ class FunCaptchaChallenge():
 
 class FunCaptchaSession:
     ## Set up session object
-    def __init__(self, public_key, service_url, page_url, proxy=None, download_images=True, verify=True, timeout=15):
+    def __init__(self, public_key, service_url, page_url, user_agent=DEFAULT_USER_AGENT, proxy=None, download_images=True, verify=True, timeout=15):
         self.public_key = public_key
         self.service_url = service_url.rstrip("/")
         self.page_url = page_url.rstrip("/")
@@ -279,6 +279,7 @@ class FunCaptchaSession:
         self.r.headers["Accept"] = "*/*"
         self.r.headers["Accept-Language"] = "en-US,en;q=0.5"
         self.r.headers["Accept-Encoding"] = "gzip, deflate, br"
+        
         ## Disable SSL validation (for debugging)
         if not verify:
             self.r.verify = False

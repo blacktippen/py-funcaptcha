@@ -229,8 +229,9 @@ class FunCaptchaChallenge():
 
     ## Download image data from url
     def download_image(self, image_url):
-        i_resp = (self.session.r if PROXY_IMAGE_DOWNLOADS else requests).get(
+        i_resp = self.session.r.get(
             url=image_url,
+            proxies={} if not PROXY_IMAGE_DOWNLOADS else None,
             headers={
                 "Referer": f"{self.session.service_url}/fc/apps/canvas/{self.id}/?meta=6"})
         return i_resp.content
@@ -283,7 +284,8 @@ class FunCaptchaChallenge():
 
 
 def get_browser_name(user_agent):
-    return httpagentparser.detect(s))["browser"]["name"].lower().strip()
+    browser_name = httpagentparser.detect(user_agent)["browser"]["name"].lower().strip()
+    return browser_name
 
 
 class FunCaptchaSession:
@@ -293,7 +295,7 @@ class FunCaptchaSession:
         self.service_url = service_url.rstrip("/")
         self.page_url = page_url.rstrip("/")
         self.site_url = "https://" + urlsplit(self.page_url).netloc
-        self.user_agent = DEFAULT_USER_AGENT
+        self.user_agent = user_agent
         self.browser = get_browser_name(self.user_agent)
         self.download_images = download_images
 
@@ -327,7 +329,7 @@ class FunCaptchaSession:
         ## Fingerprint
         fonts = "Arial,Arial Black,Arial Narrow,Book Antiqua,Bookman Old Style,Calibri,Cambria,Cambria Math,Century,Century Gothic,Century Schoolbook,Comic Sans MS,Consolas,Courier,Courier New,Garamond,Georgia,Helvetica,Impact,Lucida Bright,Lucida Calligraphy,Lucida Console,Lucida Fax,Lucida Handwriting,Lucida Sans,Lucida Sans Typewriter,Lucida Sans Unicode,Microsoft Sans Serif,Monotype Corsiva,MS Gothic,MS PGothic,MS Reference Sans Serif,MS Sans Serif,MS Serif,Palatino Linotype,Segoe Print,Segoe Script,Segoe UI,Segoe UI Light,Segoe UI Semibold,Segoe UI Symbol,Tahoma,Times,Times New Roman,Trebuchet MS,Verdana,Wingdings,Wingdings 2,Wingdings 3".split(",")
         plugins = "Chrome PDF Plugin,Chrome PDF Viewer,Native Client".split(",")
-        canvas_fp = random.randint(-1424337346, -1428337346)
+        canvas_fp = random.randint(1424337346, 1428337346) * -1
 
         fe = [
             ## DoNotTrack flag
@@ -401,13 +403,20 @@ class FunCaptchaSession:
         return data
 
 
-    ## Additional browser headers
+    ## Browsers often have unique headers of their own. This function
+    ## aims to include those headers depending on the user agent
     def get_additional_browser_headers(self):
         if self.browser == "chrome":
             return {
                 "Sec-Fetch-Site": "same-origin",
                 "Sec-Fetch-Mode": "cors",
                 "Sec-Fetch-Dest": "empty"}
+        
+        elif self.browser == "firefox":
+            return {
+                "TE": "Trailers"}
+        
+        return {}
 
 
     ## Get new challenge
@@ -419,7 +428,7 @@ class FunCaptchaSession:
             headers={
                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                 "Origin": self.site_url,
-                **self.session.get_additional_browser_headers(),
+                **self.get_additional_browser_headers(),
                 "Referer": self.page_url},
             data={
                 "bda": bda,

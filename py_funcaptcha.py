@@ -279,16 +279,14 @@ class FunCaptchaSession:
         self.r.headers["Accept"] = "*/*"
         self.r.headers["Accept-Language"] = "en-US,en;q=0.5"
         self.r.headers["Accept-Encoding"] = "gzip, deflate, br"
-        
+
         ## Disable SSL validation (for debugging)
         if not verify:
             self.r.verify = False
             requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
     
 
-    ## Get base64-encoded string of browser data for identification
-    ## So far this is all that is needed for not getting blocked
-    ## Over time the canvas int thing may get blocked, so try randomizing that
+    ## Get base64-encoded JSON string of browser data for identification
     def get_browser_data(self):
         ## Calculate encryption key
         ts = time.time()
@@ -303,7 +301,7 @@ class FunCaptchaSession:
         ## Fingerprint
         fonts = "Arial,Arial Black,Arial Narrow,Book Antiqua,Bookman Old Style,Calibri,Cambria,Cambria Math,Century,Century Gothic,Century Schoolbook,Comic Sans MS,Consolas,Courier,Courier New,Garamond,Georgia,Helvetica,Impact,Lucida Bright,Lucida Calligraphy,Lucida Console,Lucida Fax,Lucida Handwriting,Lucida Sans,Lucida Sans Typewriter,Lucida Sans Unicode,Microsoft Sans Serif,Monotype Corsiva,MS Gothic,MS PGothic,MS Reference Sans Serif,MS Sans Serif,MS Serif,Palatino Linotype,Segoe Print,Segoe Script,Segoe UI,Segoe UI Light,Segoe UI Semibold,Segoe UI Symbol,Tahoma,Times,Times New Roman,Trebuchet MS,Verdana,Wingdings,Wingdings 2,Wingdings 3".split(",")
         plugins = "Chrome PDF Plugin,Chrome PDF Viewer,Native Client".split(",")
-        canvas_fp = -1424337346
+        canvas_fp = random.randint(-1424337346, -1428337346)
 
         fe = [
             ## DoNotTrack flag

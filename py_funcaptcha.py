@@ -1,6 +1,7 @@
 import requests
 import random
 import time
+import httpagentparser
 from urllib.parse import urlsplit
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 ## For image manipulation
@@ -281,6 +282,10 @@ class FunCaptchaChallenge():
             yield img, submit
 
 
+def get_browser_name(user_agent):
+    return httpagentparser.detect(s))["browser"]["name"].lower().strip()
+
+
 class FunCaptchaSession:
     ## Set up session object
     def __init__(self, public_key, service_url, page_url, user_agent=DEFAULT_USER_AGENT, proxy=None, download_images=True, verify=True, timeout=15):
@@ -289,7 +294,7 @@ class FunCaptchaSession:
         self.page_url = page_url.rstrip("/")
         self.site_url = "https://" + urlsplit(self.page_url).netloc
         self.user_agent = DEFAULT_USER_AGENT
-        self.browser = get_browser(self.user_agent)
+        self.browser = get_browser_name(self.user_agent)
         self.download_images = download_images
 
         ## Create and set-up requests.Session() object

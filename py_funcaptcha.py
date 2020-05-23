@@ -117,9 +117,14 @@ class FunCaptchaChallenge():
             headers={
                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                 "cache-control": "no-cache",
+                "X-NewRelic-Timestamp": str(int(time.time()*1000)),
+                "X-Requested-With": "XMLHTTPRequest",
                 "X-Requested-ID": self.get_request_id(),
+                **self.session.get_additional_browser_headers(),
                 "Origin": self.session.service_url, 
                 "Referer": self.session.service_url + "/fc/gc"},
+            cookies={
+                "timestamp": str(int(time.time()*1000))},
             data={
                 "analytics_tier": self.analytics_tier,
                 "render_type": "canvas",
@@ -169,9 +174,14 @@ class FunCaptchaChallenge():
             headers={
                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                 "cache-control": "no-cache",
+                "X-NewRelic-Timestamp": str(int(time.time()*1000)),
+                "X-Requested-With": "XMLHTTPRequest",
                 "X-Requested-ID": self.get_request_id(),
+                **self.session.get_additional_browser_headers(),
                 "Origin": self.session.service_url, 
                 "Referer": self.session.service_url + "/fc/gc"},
+            cookies={
+                "timestamp": str(int(time.time()*1000))},
             data={
                 **kwargs}).json()
 
@@ -193,9 +203,14 @@ class FunCaptchaChallenge():
             headers={
                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                 "cache-control": "no-cache",
+                "X-NewRelic-Timestamp": str(int(time.time()*1000)),
+                "X-Requested-With": "XMLHTTPRequest",
                 "X-Requested-ID": self.get_request_id(),
+                **self.session.get_additional_browser_headers(),
                 "Origin": self.session.service_url, 
                 "Referer": self.session.service_url + "/fc/gc"},
+            cookies={
+                "timestamp": str(int(time.time()*1000))},
             data={
                 "game_token": self.token,
                 "session_token": self.session_token,
@@ -229,9 +244,14 @@ class FunCaptchaChallenge():
             headers={
                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                 "cache-control": "no-cache",
+                "X-NewRelic-Timestamp": str(int(time.time()*1000)),
+                "X-Requested-With": "XMLHTTPRequest",
                 "X-Requested-ID": self.get_request_id(),
+                **self.session.get_additional_browser_headers(),
                 "Origin": self.session.service_url, 
                 "Referer": f"{self.session.service_url}/fc/gc"},
+            cookies={
+                "timestamp": str(int(time.time()*1000))},
             data={
                 "game_token": self.token,
                 "sid": self.region,
@@ -269,6 +289,7 @@ class FunCaptchaSession:
         self.page_url = page_url.rstrip("/")
         self.site_url = "https://" + urlsplit(self.page_url).netloc
         self.user_agent = DEFAULT_USER_AGENT
+        self.browser = get_browser(self.user_agent)
         self.download_images = download_images
 
         ## Create and set-up requests.Session() object
@@ -375,6 +396,15 @@ class FunCaptchaSession:
         return data
 
 
+    ## Additional browser headers
+    def get_additional_browser_headers(self):
+        if self.browser == "chrome":
+            return {
+                "Sec-Fetch-Site": "same-origin",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Dest": "empty"}
+
+
     ## Get new challenge
     def new_challenge(self):
         bda = self.get_browser_data()
@@ -384,6 +414,7 @@ class FunCaptchaSession:
             headers={
                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                 "Origin": self.site_url,
+                **self.session.get_additional_browser_headers(),
                 "Referer": self.page_url},
             data={
                 "bda": bda,

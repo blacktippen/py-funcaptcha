@@ -37,7 +37,7 @@ print("Number of Images:", len(ch.image_urls))
 ## Iterate over challenge images
 ## image is PIL.Image object
 for image, submit in ch.get_iter():
-    ## Generate random guess (this is not a viable option for solving challenges, in a real scenario you would use machine-learning)
+    ## Generate random guess (this is not a viable option for solving challenges, in a real scenario you would use machine-learning or human-based image rotating services)
     guess = ch.angle * randint(1, int(360/ch.angle) - 1)
     ## Submit guess
     solved = submit(guess)

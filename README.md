@@ -1,5 +1,5 @@
 # py-funcaptcha
-Python module for interacting with ArkoseLabs' FunCaptcha. NOT A SOLVER IN ITSELF.
+Python module for interacting with ArkoseLabs' FunCaptcha. **NOT A SOLVER IN ITSELF.**
 
 ### Things to note
 - `<ch>.full_token` is the token you submit to the website once you solved the challenge
@@ -37,7 +37,7 @@ print("Number of Images:", len(ch.image_urls))
 ## Iterate over challenge images
 ## image is PIL.Image object
 for image, submit in ch.get_iter():
-    ## Generate random guess
+    ## Generate random guess (this is not a viable option for solving challenges, in a real scenario you would use machine-learning)
     guess = ch.angle * randint(1, int(360/ch.angle) - 1)
     ## Submit guess
     solved = submit(guess)

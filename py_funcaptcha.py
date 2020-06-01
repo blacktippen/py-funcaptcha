@@ -58,6 +58,14 @@ def get_xy():
     return new_pos
 
 
+## Custom timestamp format used by FC
+def get_ts():
+    ts = str(int(time.time() * 1000))
+    p1 = ts[0:7]
+    p2 = ts[7:13]
+    n = p1 + "00" + p2
+    return n
+
 ## CryptoJS AES Encryption
 def cryptojs_encrypt(data, key):
     # Padding
@@ -113,19 +121,20 @@ class FunCaptchaChallenge():
     
     ## Reload the challenge
     def reload(self, status):
+        ts = get_ts()
         r_resp = self.session.r.post(
             url=f"{self.session.service_url}/fc/gfct/",
             headers={
                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                 "cache-control": "no-cache",
-                "X-NewRelic-Timestamp": str(int(time.time()*1000)),
+                "X-NewRelic-Timestamp": ts,
                 "X-Requested-With": "XMLHTTPRequest",
                 "X-Requested-ID": self.get_request_id(),
                 **self.session.get_additional_browser_headers(),
                 "Origin": self.session.service_url, 
                 "Referer": self.session.service_url + "/fc/gc"},
             cookies={
-                "timestamp": str(int(time.time()*1000))},
+                "timestamp": ts},
             data={
                 "analytics_tier": self.analytics_tier,
                 "render_type": "canvas",
@@ -170,19 +179,20 @@ class FunCaptchaChallenge():
     
     ## Send analytics logging request
     def send_analytics(self, **kwargs):
+        ts = get_ts()
         an_resp = self.session.r.post(
             url=f"{self.session.service_url}/fc/a/",
             headers={
                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                 "cache-control": "no-cache",
-                "X-NewRelic-Timestamp": str(int(time.time()*1000)),
+                "X-NewRelic-Timestamp": ts,
                 "X-Requested-With": "XMLHTTPRequest",
                 "X-Requested-ID": self.get_request_id(),
                 **self.session.get_additional_browser_headers(),
                 "Origin": self.session.service_url, 
                 "Referer": self.session.service_url + "/fc/gc"},
             cookies={
-                "timestamp": str(int(time.time()*1000))},
+                "timestamp": ts},
             data={
                 **kwargs}).json()
 
@@ -199,19 +209,20 @@ class FunCaptchaChallenge():
         else:
             self.update_metadata(origin="guess")
         
+        ts = get_ts()
         sg_resp = self.session.r.post(
             url=f"{self.session.service_url}/fc/ca/",
             headers={
                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                 "cache-control": "no-cache",
-                "X-NewRelic-Timestamp": str(int(time.time()*1000)),
+                "X-NewRelic-Timestamp": ts,
                 "X-Requested-With": "XMLHTTPRequest",
                 "X-Requested-ID": self.get_request_id(),
                 **self.session.get_additional_browser_headers(),
                 "Origin": self.session.service_url, 
                 "Referer": self.session.service_url + "/fc/gc"},
             cookies={
-                "timestamp": str(int(time.time()*1000))},
+                "timestamp": ts},
             data={
                 "game_token": self.token,
                 "session_token": self.session_token,
@@ -241,19 +252,20 @@ class FunCaptchaChallenge():
     def get_encryption_key(self):
         self.update_metadata(origin="ekey")
 
+        ts = get_ts()
         ek_resp = self.session.r.post(
             url=f"{self.session.service_url}/fc/ekey/",
             headers={
                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                 "cache-control": "no-cache",
-                "X-NewRelic-Timestamp": str(int(time.time()*1000)),
+                "X-NewRelic-Timestamp": ts,
                 "X-Requested-With": "XMLHTTPRequest",
                 "X-Requested-ID": self.get_request_id(),
                 **self.session.get_additional_browser_headers(),
                 "Origin": self.session.service_url, 
                 "Referer": f"{self.session.service_url}/fc/gc"},
             cookies={
-                "timestamp": str(int(time.time()*1000))},
+                "timestamp": ts},
             data={
                 "game_token": self.token,
                 "sid": self.region,

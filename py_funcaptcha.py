@@ -147,7 +147,7 @@ class FunCaptchaChallenge():
         self.token = r_resp["challengeID"]
         self.id = r_resp["challengeURL"]
         self.timeout = r_resp["sec"]
-        self.angle = 51.4
+        self.angle = 60
         self.encrypted_mode = bool(r_resp["game_data"]["customGUI"]["encrypted_mode"])
         self.image_urls = r_resp["game_data"]["customGUI"]["_challenge_imgs"]
 

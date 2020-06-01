@@ -66,6 +66,13 @@ def get_ts():
     n = p1 + "00" + p2
     return n
 
+## Calculate angle from _guiFontColr
+def get_rotation_angle(gui_font_clr):
+    angle = int(gui_font_clr.replace("#", "")[-3:], 16)
+    if angle > 113:
+        angle = angle/10
+    return angle
+
 ## CryptoJS AES Encryption
 def cryptojs_encrypt(data, key):
     # Padding
@@ -147,7 +154,7 @@ class FunCaptchaChallenge():
         self.token = r_resp["challengeID"]
         self.id = r_resp["challengeURL"]
         self.timeout = r_resp["sec"]
-        self.angle = 51.4
+        self.angle = get_rotation_angle(r_resp["game_data"]["customGUI"]["_guiFontColr"])
         self.encrypted_mode = bool(r_resp["game_data"]["customGUI"]["encrypted_mode"])
         self.image_urls = r_resp["game_data"]["customGUI"]["_challenge_imgs"]
 

@@ -115,6 +115,7 @@ class FunCaptchaChallenge():
     ## Set up challenge object
     def __init__(self, session, bda, full_token, session_token, region, lang, analytics_tier, download_images=True):
         self.session = session
+        self.proxy = self.session.proxy
         self.bda = bda
         self.full_token = full_token
         self.session_token = session_token

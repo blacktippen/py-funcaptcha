@@ -320,6 +320,7 @@ class FunCaptchaSession:
 
         ## Create and set-up requests.Session() object
         self.r = requests.session()
+        self.proxy = proxy
         if proxy: self.r.proxies = {"http": proxy, "https": proxy}
         self.r.timeout = timeout
         self.r.headers["User-Agent"] = self.user_agent

@@ -19,7 +19,7 @@ import secrets
 
 
 ## Default params
-DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:76.0) Gecko/20100101 Firefox/76.0"
+DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36"
 ## Decides if images should be downloaded over the specified proxy or not
 ## Turning this off improves speed
 PROXY_IMAGE_DOWNLOADS = False
@@ -474,25 +474,3 @@ class FunCaptchaSession:
             lang=data["lang"],
             analytics_tier=int(data["at"]),
             download_images=self.download_images)
-
-
-## Testing stuff
-if __name__ == "__main__":
-    s = FunCaptchaSession(
-        public_key="9F35E182-C93C-EBCC-A31D-CF8ED317B996",
-        service_url="https://roblox-api.arkoselabs.com",
-        page_url="https://www.roblox.com/login")
-    ch = s.new_challenge()
-
-    print("Full Token ::", ch.full_token)
-    print("Session Token ::", ch.session_token)
-    print("Challenge Token ::", ch.token)
-    print("# of Images ::", len(ch.image_urls))
-
-    for image, submit in ch.get_iter():
-        image.show()
-        solved = submit(51.4)
-    
-    print("Solved ::", solved)
-
-    input("Press any key to exit ..")

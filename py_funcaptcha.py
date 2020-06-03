@@ -413,7 +413,7 @@ class FunCaptchaSession:
         data.append({"key": "f", "value": fp})
         data.append({"key": "n", "value": base64.b64encode(str(int(ts)).encode("utf-8")).decode("utf-8")})
         data.append({"key": "wh", "value": wh})
-        data.append({"key": "fe", "value": fe})
+        data.append({"value": fe, "key": "fe"}) ## Yes, this is intentional
         data.append({"key": "ife_hash", "value": ife_hash})
         data.append({"key": "cs", "value": 1})
         data.append({"key": "jsbd", "value": '{"HL":28,"NCE":true,"DA":null,"DR":null,"DMT":31,"DO":null,"DOT":31}'})

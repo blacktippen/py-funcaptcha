@@ -28,7 +28,7 @@ s = FunCaptchaSession(
     proxy="https://127.0.0.1:8888",
     predownload_images=True)
 ## Obtain challenge
-ch = s.new_challenge()
+ch = s.create_new_challenge()
 
 ## Print challenge details
 print("Full Token:", ch.full_token)

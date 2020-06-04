@@ -113,7 +113,7 @@ class FunCaptchaChallenge():
     metadata = {}
     
     ## Set up challenge object
-    def __init__(self, session, bda, full_token, session_token, region, lang, analytics_tier, download_images=True):
+    def __init__(self, session, bda, full_token, session_token, region, lang, analytics_tier, predownload_images=True):
         self.session = session
         self.bda = bda
         self.full_token = full_token
@@ -121,7 +121,7 @@ class FunCaptchaChallenge():
         self.region = region
         self.lang = lang
         self.analytics_tier = analytics_tier
-        self.download_images = download_images
+        self.predownload_images = predownload_images
         self.send_analytics(render_type="canvas", sid=self.region, category="Site URL", analytics_tier=self.analytics_tier, session_token=self.session_token, action=self.session.page_url)
         self.reload(status="init")
 
@@ -160,7 +160,7 @@ class FunCaptchaChallenge():
 
         if self.image_urls:
             ## Preload images
-            if self.download_images:
+            if self.predownload_images:
                 self.images = list(map(self.download_image, self.image_urls))
             
             self.send_analytics(render_type="canvas", sid=self.region, category="loaded", game_token=self.token, analytics_tier=self.analytics_tier, game_type=1, session_token=self.session_token, action="game loaded")
@@ -290,12 +290,12 @@ class FunCaptchaChallenge():
 
     def get_iter(self):
         guesses = []
-        images_enabled = self.download_images
+        images_enabled = self.predownload_images
         for img_data in self.images or self.image_urls:
-            img = None
-            if images_enabled:
-                img_data = cryptojs_decrypt(img_data, self.key)
-                img = Image.open(BytesIO(img_data))
+            if not images_enabled:
+                img_data = self.download_image(img_data)
+            img_data = cryptojs_decrypt(img_data, self.key)
+            img = Image.open(BytesIO(img_data))
             def submit(guess):
                 guesses.append(guess)
                 return self.submit_guesses(guesses)
@@ -309,14 +309,14 @@ def get_browser_name(user_agent):
 
 class FunCaptchaSession:
     ## Set up session object
-    def __init__(self, public_key, service_url, page_url, user_agent=DEFAULT_USER_AGENT, proxy=None, download_images=True, verify=True, timeout=15):
+    def __init__(self, public_key, service_url, page_url, user_agent=DEFAULT_USER_AGENT, proxy=None, predownload_images=True, verify=True, timeout=15):
         self.public_key = public_key
         self.service_url = service_url.rstrip("/")
         self.page_url = page_url.rstrip("/")
         self.site_url = "https://" + urlsplit(self.page_url).netloc
         self.user_agent = user_agent
         self.browser = get_browser_name(self.user_agent)
-        self.download_images = download_images
+        self.predownload_images = predownload_images
 
         ## Create and set-up requests.Session() object
         self.r = requests.session()
@@ -471,7 +471,7 @@ class FunCaptchaSession:
             region=data["r"],
             lang=data["lang"],
             analytics_tier=int(data["at"]),
-            download_images=self.download_images)
+            predownload_images=self.predownload_images)
 
 
 ## Testing stuff

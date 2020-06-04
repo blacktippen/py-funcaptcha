@@ -441,7 +441,7 @@ class FunCaptchaSession:
 
 
     ## Get new challenge
-    def new_challenge(self):
+    def create_new_challenge(self):
         bda = self.get_browser_data()
         rnd = get_float()
         nc_resp = self.r.post(
@@ -474,25 +474,3 @@ class FunCaptchaSession:
             lang=data["lang"],
             analytics_tier=int(data["at"]),
             predownload_images=self.predownload_images)
-
-
-## Testing stuff
-if __name__ == "__main__":
-    s = FunCaptchaSession(
-        public_key="9F35E182-C93C-EBCC-A31D-CF8ED317B996",
-        service_url="https://roblox-api.arkoselabs.com",
-        page_url="https://www.roblox.com/login")
-    ch = s.new_challenge()
-
-    print("Full Token ::", ch.full_token)
-    print("Session Token ::", ch.session_token)
-    print("Challenge Token ::", ch.token)
-    print("# of Images ::", len(ch.image_urls))
-
-    for image, submit in ch.get_iter():
-        image.show()
-        solved = submit(51.4)
-    
-    print("Solved ::", solved)
-
-    input("Press any key to exit ..")

@@ -19,7 +19,7 @@ import secrets
 
 
 ## Default params
-DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:76.0) Gecko/20100101 Firefox/76.0"
+DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36"
 ## Decides if images should be downloaded over the specified proxy or not
 ## Turning this off improves speed
 PROXY_IMAGE_DOWNLOADS = False
@@ -115,6 +115,7 @@ class FunCaptchaChallenge():
     ## Set up challenge object
     def __init__(self, session, bda, full_token, session_token, region, lang, analytics_tier, predownload_images=True):
         self.session = session
+        self.proxy = self.session.proxy
         self.bda = bda
         self.full_token = full_token
         self.session_token = session_token
@@ -135,7 +136,7 @@ class FunCaptchaChallenge():
                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                 "cache-control": "no-cache",
                 "X-NewRelic-Timestamp": ts,
-                "X-Requested-With": "XMLHTTPRequest",
+                "X-Requested-With": "XMLHttpRequest",
                 "X-Requested-ID": self.get_request_id(),
                 **self.session.get_additional_browser_headers(),
                 "Origin": self.session.service_url, 
@@ -193,7 +194,7 @@ class FunCaptchaChallenge():
                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                 "cache-control": "no-cache",
                 "X-NewRelic-Timestamp": ts,
-                "X-Requested-With": "XMLHTTPRequest",
+                "X-Requested-With": "XMLHttpRequest",
                 "X-Requested-ID": self.get_request_id(),
                 **self.session.get_additional_browser_headers(),
                 "Origin": self.session.service_url, 
@@ -223,7 +224,7 @@ class FunCaptchaChallenge():
                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                 "cache-control": "no-cache",
                 "X-NewRelic-Timestamp": ts,
-                "X-Requested-With": "XMLHTTPRequest",
+                "X-Requested-With": "XMLHttpRequest",
                 "X-Requested-ID": self.get_request_id(),
                 **self.session.get_additional_browser_headers(),
                 "Origin": self.session.service_url, 
@@ -266,7 +267,7 @@ class FunCaptchaChallenge():
                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                 "cache-control": "no-cache",
                 "X-NewRelic-Timestamp": ts,
-                "X-Requested-With": "XMLHTTPRequest",
+                "X-Requested-With": "XMLHttpRequest",
                 "X-Requested-ID": self.get_request_id(),
                 **self.session.get_additional_browser_headers(),
                 "Origin": self.session.service_url, 
@@ -320,6 +321,7 @@ class FunCaptchaSession:
 
         ## Create and set-up requests.Session() object
         self.r = requests.session()
+        self.proxy = proxy
         if proxy: self.r.proxies = {"http": proxy, "https": proxy}
         self.r.timeout = timeout
         self.r.headers["User-Agent"] = self.user_agent
@@ -411,7 +413,7 @@ class FunCaptchaSession:
         data.append({"key": "f", "value": fp})
         data.append({"key": "n", "value": base64.b64encode(str(int(ts)).encode("utf-8")).decode("utf-8")})
         data.append({"key": "wh", "value": wh})
-        data.append({"key": "fe", "value": fe})
+        data.append({"value": fe, "key": "fe"}) ## Yes, this is intentional
         data.append({"key": "ife_hash", "value": ife_hash})
         data.append({"key": "cs", "value": 1})
         data.append({"key": "jsbd", "value": '{"HL":28,"NCE":true,"DA":null,"DR":null,"DMT":31,"DO":null,"DOT":31}'})

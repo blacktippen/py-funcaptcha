@@ -26,7 +26,7 @@ s = FunCaptchaSession(
     service_url="https://roblox-api.arkoselabs.com",
     page_url="https://www.roblox.com/login",
     proxy="https://127.0.0.1:8888",
-    download_images=True)
+    predownload_images=True)
 ## Obtain challenge
 ch = s.new_challenge()
 

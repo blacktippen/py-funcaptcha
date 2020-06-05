@@ -1,1 +1,1 @@
-
+- Get fingerprint hashing to work

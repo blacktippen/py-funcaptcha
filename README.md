@@ -40,8 +40,10 @@ for image, submit in ch.get_iter():
     ## Generate random guess
     ## (this is not a viable option for solving challenges, as in a real scenario you would use machine-learning or human-assisted image rotating services)
     guess = ch.angle * randint(1, int(360/ch.angle) - 1)
+    
     ## Show preview (.rotate method is reversed)
     image.rotate(guess*-1).show()
+    
     ## Submit guess
     solved = submit(guess)
 

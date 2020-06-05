@@ -1,5 +1,5 @@
 # py-funcaptcha
-Python module for interacting with ArkoseLabs' FunCaptcha. **NOT A SOLVER IN ITSELF.**
+Python module for interacting with ArkoseLabs FunCaptcha. **NOT A SOLVER IN ITSELF.**
 
 ### Things to note
 - `<ch>.full_token` is the token you submit to the website once you solved the challenge
@@ -11,8 +11,8 @@ Python module for interacting with ArkoseLabs' FunCaptcha. **NOT A SOLVER IN ITS
 ```bash
 sudo apt install nodejs
 pip3 install -r requirements.txt
-# on windows machines you'll also have to install the module pycryptodome
 ```
+On Windows machines you'll also have to install the module `pycryptodome`
 
 
 ### Usage
@@ -35,9 +35,10 @@ print("Full Token:", ch.full_token)
 print("Number of Images:", len(ch.image_urls))
 
 ## Iterate over challenge images
-## image is PIL.Image object
+## (the image is PIL.Image object)
 for image, submit in ch.get_iter():
-    ## Generate random guess (this is not a viable option for solving challenges, in a real scenario you would use machine-learning or human-based image rotating services)
+    ## Generate random guess
+    ## (this is not a viable option for solving challenges, as in a real scenario you would use machine-learning or human-assisted image rotating services)
     guess = ch.angle * randint(1, int(360/ch.angle) - 1)
     ## Submit guess
     solved = submit(guess)

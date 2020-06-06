@@ -61,7 +61,7 @@ def get_xy():
 ## Custom timestamp format used by FC
 def get_ts():
     ts = str(int(time.time() * 1000))
-    p1 = ts[0:7]
+    p1 = ts[:7]
     p2 = ts[7:13]
     n = p1 + "00" + p2
     return n

@@ -1,1 +1,3 @@
 - Get fingerprint hashing to work
+- Add some parameters to get_additional_browser_headers
+- Fix the order of headers (might require abandoning requests module)

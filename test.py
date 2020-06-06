@@ -7,7 +7,7 @@ session = FunCaptchaSession(
     user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36",
     proxy="localhost:8866",
     verify=False)
-ch = session.new_challenge()
+ch = session.create_new_challenge()
 
 print("Challenge ID:", ch.token)
 print("Session ID:", ch.session_token)

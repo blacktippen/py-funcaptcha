@@ -15,4 +15,4 @@ print("# of images:", len(ch.image_urls))
 
 for image, submit in ch.get_iter():
     image.save("latest.png")
-    print(submit(51.40))
+    print(submit(ch.angle))

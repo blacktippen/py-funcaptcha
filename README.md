@@ -3,7 +3,7 @@ Python module for interacting with *ArkoseLabs FunCaptcha*. **NOT A SOLVER IN IT
 
 ### Things to note
 - `<ch>.full_token` is the token you submit to the website once you solved the challenge
-- PIL.Image's *.rotate* method is reversed, therefore you'll have to multiply the degree by -1 to get the correct result
+- Pillow's *.rotate* method is reversed, therefore you'll have to multiply the degree by -1 to get the correctly rotated image
 
 
 ### Setup

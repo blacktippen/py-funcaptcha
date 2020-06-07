@@ -20,9 +20,7 @@ import secrets
 
 ## Default params
 DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36"
-## Decides if images should be downloaded over the specified proxy or not
-## Turning this off improves speed
-PROXY_IMAGE_DOWNLOADS = False
+PROXY_IMAGE_DOWNLOADS = True
 
 
 ## Load .js module for murmur3 related functions (used in BDA/fingerprint2 generation)
@@ -67,8 +65,8 @@ def get_ts():
     return n
 
 ## Calculate angle from _guiFontColr
-def get_rotation_angle(gui_font_clr):
-    angle = int(gui_font_clr.replace("#", "")[-3:], 16)
+def get_rotation_angle(font_clr):
+    angle = int(font_clr.replace("#", "")[-3:], 16)
     if angle > 113:
         angle = angle/10
     return angle

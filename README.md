@@ -23,8 +23,8 @@ s = FunCaptchaSession(
     public_key="9F35E182-C93C-EBCC-A31D-CF8ED317B996",
     service_url="https://roblox-api.arkoselabs.com",
     page_url="https://www.roblox.com/login",
-    #proxy="https://127.0.0.1:8888",
-    predownload_images=True)
+    #proxy="https://127.0.0.1:8888"
+    )
 ## Obtain challenge
 ch = s.create_new_challenge()
 
@@ -32,11 +32,9 @@ ch = s.create_new_challenge()
 print("Full Token:", ch.full_token)
 print("Number of Images:", len(ch.image_urls))
 
-## Iterate over challenge images
-## (the image is PIL.Image object)
+## Iterate over challenge images (Pillow)
 for image, submit in ch.get_iter():
-    ## Generate random guess
-    ## (this is not a viable option for solving challenges, as in a real scenario you would use machine-learning or human-assisted image rotating services)
+    ## Generate a random guess
     guess = ch.angle * randint(1, int(360/ch.angle) - 1)
     
     ## Show preview (.rotate method is reversed)

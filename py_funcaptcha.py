@@ -373,7 +373,7 @@ class FunCaptchaSession:
             ## Depth
             "D:24",
             ## Pixel ratio
-            "PR:1",
+            "PR:1.100000023841858",
             ## Screen resolution
             "S:1920,1080",
             ## Available screen resolution (browser window size)

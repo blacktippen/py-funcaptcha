@@ -25,10 +25,11 @@ s = FunCaptchaSession(
     page_url="https://www.roblox.com/login",
     #proxy="https://127.0.0.1:8888"
     )
-## Obtain challenge
+    
+## Obtain a new challenge
 ch = s.create_new_challenge()
 
-## Print challenge details
+## Print some challenge details
 print("Full Token:", ch.full_token)
 print("Number of Images:", len(ch.image_urls))
 
@@ -41,6 +42,7 @@ for image, submit in ch.get_iter():
     image.rotate(guess*-1).show()
     
     ## Submit guess
+    print("Submitting guess:", guess)
     solved = submit(guess)
 
 ## Print final result

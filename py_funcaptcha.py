@@ -14,7 +14,7 @@ import hashlib
 import json
 import string
 import re
-import execjs
+## import execjs
 import secrets
 
 
@@ -25,7 +25,7 @@ PROXY_IMAGE_DOWNLOADS = True
 
 ## Load .js module for murmur3 related functions (used in BDA/fingerprint2 generation)
 with open("fp.js") as f:
-    mm3js = execjs.compile(f.read())
+    pass ## mm3js = execjs.compile(f.read())
 
 
 ## Create dict of fields from full token string
@@ -416,7 +416,7 @@ class FunCaptchaSession:
         ## Calculate hashes
         ## I haven't managed to replicate fp hashes yet, so it's just filled with a random value for now
         fp = secrets.token_hex(16)
-        ife_hash = mm3js.call("x64hash128", ", ".join(fe), 38)
+        ife_hash = secrets.token_hex(16) ## mm3js.call("x64hash128", ", ".join(fe), 38)
 
         ## Window hash
         ## This cannot be verified by the server, so it's just a random value for now

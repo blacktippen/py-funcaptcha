@@ -21,11 +21,14 @@ import secrets
 ## Default params
 DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36"
 PROXY_IMAGE_DOWNLOADS = True
+USE_FAKE_HASHES = True
 
 
-## Load .js module for murmur3 related functions (used in BDA/fingerprint2 generation)
-with open("fp.js") as f:
-    pass ## mm3js = execjs.compile(f.read())
+mm3js = None
+if not USE_FAKE_HASHES:
+    ## Load .js module for murmur3 related functions (used in BDA/fingerprint2 generation)
+    with open("fp.js") as f:
+        mm3js = execjs.compile(f.read())
 
 
 ## Create dict of fields from full token string
@@ -57,17 +60,33 @@ def get_xy():
 
 
 ## Custom timestamp format used by FC
-def get_ts():
+def get_timestamp():
     ts = str(int(time.time() * 1000))
     p1 = ts[:7]
     p2 = ts[7:13]
     n = p1 + "00" + p2
     return n
 
+
+## Canvas fingerprint generator
+def get_canvas_fingerprint():
+    return random.randint(1424337346, 1428337346) * -1
+
+
+## Generate font keys
+def get_font_keys():
+    return "Arial,Arial Black,Arial Narrow,Book Antiqua,Bookman Old Style,Calibri,Cambria,Cambria Math,Century,Century Gothic,Century Schoolbook,Comic Sans MS,Consolas,Courier,Courier New,Garamond,Georgia,Helvetica,Impact,Lucida Bright,Lucida Calligraphy,Lucida Console,Lucida Fax,Lucida Handwriting,Lucida Sans,Lucida Sans Typewriter,Lucida Sans Unicode,Microsoft Sans Serif,Monotype Corsiva,MS Gothic,MS PGothic,MS Reference Sans Serif,MS Sans Serif,MS Serif,Palatino Linotype,Segoe Print,Segoe Script,Segoe UI,Segoe UI Light,Segoe UI Semibold,Segoe UI Symbol,Tahoma,Times,Times New Roman,Trebuchet MS,Verdana,Wingdings,Wingdings 2,Wingdings 3".split(",")
+
+
+## Generate plugin keys
+def get_plugin_keys():
+    return "Chrome PDF Plugin,Chrome PDF Viewer,Native Client".split(",")
+
+
 ## Generate jsbd value (time-related)
 ## Yet to look into how this is actually generated. This is just for quickly fixing
 ## FunCaptcha's ban on the default jsbd that we had previously
-def get_jsbd():
+def get_jsbd(browser):
     ## {"HL":28,"NCE":true,"DA":null,"DR":null,"DMT":31,"DO":null,"DOT":31}'
     return json.dumps({
         "HL": random.randint(1, 28),
@@ -79,12 +98,14 @@ def get_jsbd():
         "DOT": random.randint(1, 31)
     }, separators=(',',':'))
     
+    
 ## Calculate angle from _guiFontColr
 def get_rotation_angle(font_clr):
     angle = int(font_clr.replace("#", "")[-3:], 16)
     if angle > 113:
         angle = angle/10
     return angle
+
 
 ## CryptoJS AES Encryption
 def cryptojs_encrypt(data, key):
@@ -142,7 +163,7 @@ class FunCaptchaChallenge():
     
     ## Reload the challenge
     def reload(self, status):
-        ts = get_ts()
+        ts = get_timestamp()
         r_resp = self.session.r.post(
             url=f"{self.session.service_url}/fc/gfct/",
             headers={
@@ -200,7 +221,7 @@ class FunCaptchaChallenge():
     
     ## Send analytics logging request
     def send_analytics(self, **kwargs):
-        ts = get_ts()
+        ts = get_timestamp()
         an_resp = self.session.r.post(
             url=f"{self.session.service_url}/fc/a/",
             headers={
@@ -230,7 +251,7 @@ class FunCaptchaChallenge():
         else:
             self.update_metadata(origin="guess")
         
-        ts = get_ts()
+        ts = get_timestamp()
         sg_resp = self.session.r.post(
             url=f"{self.session.service_url}/fc/ca/",
             headers={
@@ -273,7 +294,7 @@ class FunCaptchaChallenge():
     def get_encryption_key(self):
         self.update_metadata(origin="ekey")
 
-        ts = get_ts()
+        ts = get_timestamp()
         ek_resp = self.session.r.post(
             url=f"{self.session.service_url}/fc/ekey/",
             headers={
@@ -350,24 +371,14 @@ class FunCaptchaSession:
 
     ## Get base64-encoded JSON string of browser data for identification
     def get_browser_data(self):
-        ## Calculate encryption key
-        ts = time.time()
-        timeframe = int(ts - (ts % 21600))
-        key = self.user_agent + str(timeframe)
-
-        ## Data
-        data = []
-        data.append({"key": "api_type", "value": "js"})
-        data.append({"key": "p", "value": 1})
-
         ## Fingerprint
-        fonts = "Arial,Arial Black,Arial Narrow,Book Antiqua,Bookman Old Style,Calibri,Cambria,Cambria Math,Century,Century Gothic,Century Schoolbook,Comic Sans MS,Consolas,Courier,Courier New,Garamond,Georgia,Helvetica,Impact,Lucida Bright,Lucida Calligraphy,Lucida Console,Lucida Fax,Lucida Handwriting,Lucida Sans,Lucida Sans Typewriter,Lucida Sans Unicode,Microsoft Sans Serif,Monotype Corsiva,MS Gothic,MS PGothic,MS Reference Sans Serif,MS Sans Serif,MS Serif,Palatino Linotype,Segoe Print,Segoe Script,Segoe UI,Segoe UI Light,Segoe UI Semibold,Segoe UI Symbol,Tahoma,Times,Times New Roman,Trebuchet MS,Verdana,Wingdings,Wingdings 2,Wingdings 3".split(",")
-        plugins = "Chrome PDF Plugin,Chrome PDF Viewer,Native Client".split(",")
-        canvas_fp = random.randint(1424337346, 1428337346) * -1
+        fonts = get_font_keys()
+        plugins = get_plugin_keys()
+        canvas_fp = get_canvas_fingerprint()
 
         fe = [
             ## DoNotTrack flag
-            "DNT:unknown",
+            "DNT:" + ("unspecified" if self.browser == "firefox" else "unknown"),
             ## Language
             "L:en-US",
             ## Depth
@@ -416,15 +427,20 @@ class FunCaptchaSession:
         ## Calculate hashes
         ## I haven't managed to replicate fp hashes yet, so it's just filled with a random value for now
         fp = secrets.token_hex(16)
-        ife_hash = secrets.token_hex(16) ## mm3js.call("x64hash128", ", ".join(fe), 38)
+        ife_hash = mm3js.call("x64hash128", ", ".join(fe), 38) if not USE_FAKE_HASHES else secrets.token_hex(16)
 
         ## Window hash
         ## This cannot be verified by the server, so it's just a random value for now
         wh = secrets.token_hex(16) + "|" + secrets.token_hex(16)
         
-        jsbd = get_jsbd()
+        ## Time/date-related stuff
+        jsbd = get_jsbd(self.browser)
+        ts = time.time()
         
-        ## Additional data
+        ## BDA Data
+        data = []
+        data.append({"key": "api_type", "value": "js"})
+        data.append({"key": "p", "value": 1})
         data.append({"key": "f", "value": fp})
         data.append({"key": "n", "value": base64.b64encode(str(int(ts)).encode("utf-8")).decode("utf-8")})
         data.append({"key": "wh", "value": wh})
@@ -432,7 +448,12 @@ class FunCaptchaSession:
         data.append({"key": "ife_hash", "value": ife_hash})
         data.append({"key": "cs", "value": 1})
         data.append({"key": "jsbd", "value": jsbd})
+    
+        ## Calculate encryption key
+        timeframe = int(ts - (ts % 21600))
+        key = self.user_agent + str(timeframe)
 
+        ## JSON -> AES -> BASE64
         data = json.dumps(data, separators=(',', ':'))
         data = cryptojs_encrypt(data, key)
         data = base64.b64encode(data.encode("utf-8")).decode("utf-8")
@@ -440,7 +461,7 @@ class FunCaptchaSession:
 
 
     ## Browsers often have unique headers of their own. This function
-    ## aims to include those headers depending on the user agent
+    ## aims to include those headers depending on the user agent.
     def get_additional_browser_headers(self):
         if self.browser == "chrome":
             return {

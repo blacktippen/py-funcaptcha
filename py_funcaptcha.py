@@ -14,7 +14,6 @@ import hashlib
 import json
 import string
 import re
-## import execjs
 import secrets
 
 
@@ -27,6 +26,7 @@ USE_FAKE_HASHES = True
 mm3js = None
 if not USE_FAKE_HASHES:
     ## Load .js module for murmur3 related functions (used in BDA/fingerprint2 generation)
+    import execjs
     with open("fp.js") as f:
         mm3js = execjs.compile(f.read())
 

@@ -77,7 +77,7 @@ def get_jsbd():
         "DMT": random.randint(1, 31),
         "DO": None,
         "DOT": random.randint(1, 31)
-    }, seperators=(',',':'))
+    }, separators=(',',':'))
     
 ## Calculate angle from _guiFontColr
 def get_rotation_angle(font_clr):

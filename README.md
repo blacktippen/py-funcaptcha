@@ -5,7 +5,7 @@ Python module for interacting with *ArkoseLabs FunCaptcha*. **NOT A SOLVER IN IT
 - `<ch>.full_token` is the token you submit to the website once you solved the challenge
 - Pillow's *.rotate* method is reversed, therefore you'll have to multiply the degree by -1 to get the correctly rotated image
 
-## If ArkoseLabs is starting to detect the module as a bot, try the following things:
+### If ArkoseLabs is starting to detect the module as a bot, try the following things:
 - Change some stuff in `jsbd`
 - Change user agent
 

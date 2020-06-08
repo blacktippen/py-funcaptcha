@@ -203,6 +203,11 @@ class FunCaptchaChallenge():
             if self.encrypted_mode:
                 self.key = self.get_encryption_key()
                 self.send_analytics(render_type="canvas", sid=self.region, category="begin app", game_token=self.token, analytics_tier=self.analytics_tier, game_type=1, session_token=self.session_token, action="user clicked verify")
+    
+
+    ## Return image count
+    def get_image_count(self):
+        return len(self.image_urls)
 
 
     ## This is some sort of weird metadata that's sent in

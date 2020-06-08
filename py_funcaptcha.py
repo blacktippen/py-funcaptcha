@@ -64,6 +64,21 @@ def get_ts():
     n = p1 + "00" + p2
     return n
 
+## Generate jsbd value (time-related)
+## Yet to look into how this is actually generated. This is just for quickly fixing
+## FunCaptcha's ban on the default jsbd that we had previously
+def get_jsbd():
+    ## {"HL":28,"NCE":true,"DA":null,"DR":null,"DMT":31,"DO":null,"DOT":31}'
+    return json.dumps({
+        "HL": random.randint(1, 28),
+        "NCE": True,
+        "DA": None,
+        "DR": None,
+        "DMT": random.randint(1, 31),
+        "DO": None,
+        "DOT": random.randint(1, 31)
+    }, seperators=(',',':'))
+    
 ## Calculate angle from _guiFontColr
 def get_rotation_angle(font_clr):
     angle = int(font_clr.replace("#", "")[-3:], 16)
@@ -407,6 +422,8 @@ class FunCaptchaSession:
         ## This cannot be verified by the server, so it's just a random value for now
         wh = secrets.token_hex(16) + "|" + secrets.token_hex(16)
         
+        jsbd = get_jsbd()
+        
         ## Additional data
         data.append({"key": "f", "value": fp})
         data.append({"key": "n", "value": base64.b64encode(str(int(ts)).encode("utf-8")).decode("utf-8")})
@@ -414,7 +431,7 @@ class FunCaptchaSession:
         data.append({"value": fe, "key": "fe"}) ## Yes, this is intentional
         data.append({"key": "ife_hash", "value": ife_hash})
         data.append({"key": "cs", "value": 1})
-        data.append({"key": "jsbd", "value": '{"HL":28,"NCE":true,"DA":null,"DR":null,"DMT":31,"DO":null,"DOT":31}'})
+        data.append({"key": "jsbd", "value": jsbd})
 
         data = json.dumps(data, separators=(',', ':'))
         data = cryptojs_encrypt(data, key)

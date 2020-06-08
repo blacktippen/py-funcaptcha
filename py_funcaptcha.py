@@ -19,7 +19,6 @@ import secrets
 
 ## Default params
 DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36"
-PROXY_IMAGE_DOWNLOADS = True
 USE_FAKE_HASHES = True
 
 
@@ -284,7 +283,6 @@ class FunCaptchaChallenge():
     def download_image(self, image_url):
         i_resp = self.session.r.get(
             url=image_url,
-            proxies={} if not PROXY_IMAGE_DOWNLOADS else None,
             headers={
                 "Referer": f"{self.session.service_url}/fc/apps/canvas/{self.id}/?meta=6"})
         return i_resp.content

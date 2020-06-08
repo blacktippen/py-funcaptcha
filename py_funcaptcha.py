@@ -86,16 +86,24 @@ def get_plugin_keys():
 ## Yet to look into how this is actually generated. This is just for quickly fixing
 ## FunCaptcha's ban on the default jsbd that we had previously
 def get_jsbd(browser):
-    ## {"HL":28,"NCE":true,"DA":null,"DR":null,"DMT":31,"DO":null,"DOT":31}'
-    return json.dumps({
-        "HL": random.randint(1, 28),
-        "NCE": True,
-        "DA": None,
-        "DR": None,
-        "DMT": random.randint(1, 31),
-        "DO": None,
-        "DOT": random.randint(1, 31)
-    }, separators=(',',':'))
+    if browser == "chrome":
+        return json.dumps({
+            "HL": random.randint(1, 28),
+            "NCE": True,
+            "DA": None,
+            "DR": None,
+            "DMT": random.randint(1, 31),
+            "DO": None,
+            "DOT": random.randint(1, 31)
+        }, separators=(',',':'))
+    
+    elif browser == "firefox":
+        return json.dumps({
+            "HL": random.randint(1, 12),
+            "NCE": True,
+            "DMTO": 1,
+            "DOTO": 1
+        }, separators=(',',':'))
     
     
 ## Calculate angle from _guiFontColr

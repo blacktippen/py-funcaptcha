@@ -31,7 +31,7 @@ ch = s.create_new_challenge()
 
 ## Print some challenge details
 print("Full Token:", ch.full_token)
-print("Number of Images:", len(ch.image_urls))
+print("Number of Images:", ch.get_image_count())
 
 ## Iterate over challenge images (Pillow)
 for image, submit in ch.get_iter():

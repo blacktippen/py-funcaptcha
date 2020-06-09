@@ -1,6 +1,6 @@
 If you're solving challenges too fast, ArkoseLabs might start paying attention to what you're doing.
 
-They might utilize one or more of the following tactics to try and stop you:
+They might utilize one or more of the following tactics to try and stop what you're doing:
  
 ### Harden challenges for the user-agent you're using
 In this scenario, the difficulity and volume of challenge images is increased for anybody using the same User-Agent as you.

@@ -10,6 +10,6 @@ This usually doesn't last long, and can be solved by moving to a different User-
 
 
 ### Changes in BDA info
-BDA refers to the *bda* parameter in the `/fc/gt2/public_key/` call. It contains fingerprint information about your *browser*.
+BDA refers to the *bda* parameter in the `/fc/gt2/public_key/` call. It mostly contains fingerprint information about your *browser*.
 
-By default, *py_funcaptcha* attempts to randomize this, but it's possible that ArkoseLabs might do a couple changes here just to mess with you.
+By default, *py_funcaptcha* attempts to randomize this, but it's possible that ArkoseLabs might do a couple changes here just to mess with your solver.

@@ -32,15 +32,14 @@ s = FunCaptchaSession(
     public_key="9F35E182-C93C-EBCC-A31D-CF8ED317B996",
     service_url="https://roblox-api.arkoselabs.com",
     page_url="https://www.roblox.com/login",
-    #proxy="https://127.0.0.1:3128",
-    #timeout=15
-    )
+    proxy="https://127.0.0.1:3128")
     
 ## Obtain a new challenge
 ch = s.create_challenge()
 
 ## Print some challenge details
 print("Full Token:", ch.full_token)
+print("Degree per rotation:", ch.angle)
 print("Number of Images:", ch.get_image_count())
 
 ## Iterate over challenge images (Pillow)

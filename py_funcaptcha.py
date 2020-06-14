@@ -485,7 +485,7 @@ class FunCaptchaSession:
         ## Window hash + Window protochain
         wh = secrets.token_hex(16) + "|" + get_window_protochain_hash(self.browser)
         
-        ## Time/date-related stuff
+        ## Generate JSBD
         jsbd = get_jsbd(self.browser)
         ts = time.time()
         

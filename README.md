@@ -57,6 +57,7 @@ for image, submit in ch.get_iter():
     print("Submitting guess:", guess)
     solved = submit(guess)
 
+
 ## Print final result
 print("Solved:", solved)
 ```

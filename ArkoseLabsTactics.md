@@ -1,4 +1,4 @@
-If you're solving challenges too fast, ArkoseLabs might start paying attention to what you're doing.
+If you're solving challenges at a rapid rate, ArkoseLabs might start paying attention to what you're doing.
 
 They might utilize one or more of the following tactics to try and stop what you're doing:
  

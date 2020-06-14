@@ -6,7 +6,7 @@ Tested on: 2020-06-14
 ### Things to note
 - `.full_token` is the token you'll submit to the target website upon completing a challenge
 - Pillow's *.rotate* method is reversed, therefore you'll have to multiply the degree by -1 to get the image rotated correctly
-
+- Only the following user-agents are supported: `Google Chrome`, `Mozilla Firefox`
 ### Setup
 ```bash
 sudo apt install nodejs

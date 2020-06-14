@@ -30,7 +30,7 @@ s = FunCaptchaSession(
     )
     
 ## Obtain a new challenge
-ch = s.create_new_challenge()
+ch = s.create_challenge()
 
 ## Print some challenge details
 print("Full Token:", ch.full_token)

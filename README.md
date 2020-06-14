@@ -1,8 +1,7 @@
 # py-funcaptcha
 Python module for interacting with *ArkoseLabs FunCaptcha*. **NOT A SOLVER IN ITSELF.**
 
-6/11/2020 Note:
-The module might be broken right now, please wait for updates.
+Tested on: 2020-06-14
 
 ### Things to note
 - `<ch>.full_token` is the token you submit to the website once you solved the challenge

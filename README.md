@@ -40,7 +40,7 @@ ch = s.create_challenge()
 ## Print some challenge details
 print("Full Token:", ch.full_token)
 print("Degree per rotation:", ch.angle)
-print("Number of Images:", ch.get_image_count())
+print("Number of images:", ch.get_image_count())
 
 ## Iterate over challenge images (Pillow)
 for image, submit in ch.get_iter():

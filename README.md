@@ -1,6 +1,8 @@
 # py-funcaptcha
 Python module allowing for easy automated interaction with [ArkoseLabs FunCaptcha](https://medium.com/arkoselabs/funcaptcha-security-verification-for-people-of-all-abilities-c2f9a0ba73df).
 
+This module does not use Selenium, thus allowing solvers to reach maximum performance.
+
 Tested on: 2020-06-14
 
 # Installation

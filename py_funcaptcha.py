@@ -64,6 +64,12 @@ def get_xy() -> list:
     return new_pos
 
 
+## Get browser name from user agent
+def get_browser_name(user_agent) -> str:
+    browser_name = httpagentparser.detect(user_agent)["browser"]["name"].lower().strip()
+    return browser_name
+
+
 ## Get random user agent for session
 def get_random_user_agent() -> str:
     return random.choice(USER_AGENTS)
@@ -373,11 +379,6 @@ class FunCaptchaChallenge():
                 guesses.append(guess)
                 return self.submit_guesses(guesses)
             yield img, submit
-
-
-def get_browser_name(user_agent) -> str:
-    browser_name = httpagentparser.detect(user_agent)["browser"]["name"].lower().strip()
-    return browser_name
 
 
 class FunCaptchaSession:

@@ -21,7 +21,7 @@ On Windows machines you'll also have to install the module `pycryptodome`
 from py_funcaptcha import FunCaptchaSession
 from random import randint
 
-## Create session for Roblox's login endpoint
+## Create session for Roblox.com's login endpoint
 s = FunCaptchaSession(
     public_key="9F35E182-C93C-EBCC-A31D-CF8ED317B996",
     service_url="https://roblox-api.arkoselabs.com",

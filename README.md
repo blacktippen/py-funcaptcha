@@ -1,5 +1,5 @@
 # py-funcaptcha
-Python module allowing for easy interaction with [https://medium.com/arkoselabs/funcaptcha-security-verification-for-people-of-all-abilities-c2f9a0ba73df](ArkoseLabs FunCaptcha)
+Python module allowing for easy automated interaction with [ArkoseLabs FunCaptcha](https://medium.com/arkoselabs/funcaptcha-security-verification-for-people-of-all-abilities-c2f9a0ba73df).
 
 Tested on: 2020-06-14
 

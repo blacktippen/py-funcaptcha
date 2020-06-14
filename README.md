@@ -4,7 +4,7 @@ Python module allowing for easy automated interaction with [ArkoseLabs FunCaptch
 Tested on: 2020-06-14
 
 ### Things to note
-- `<ch>.full_token` is the token you submit to the website once you solved the challenge
+- `<challenge>.full_token` is the token you submit to the website once you solved the challenge
 - Pillow's *.rotate* method is reversed, therefore you'll have to multiply the degree by -1 to get the correctly rotated image
 
 ### Setup

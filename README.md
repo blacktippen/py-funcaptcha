@@ -7,7 +7,7 @@ Tested on: 2020-06-14
 - Does not use Selenium or any other browser automation tool
 - Completely evades bot detection
 - Supports all FunCaptcha clients/websites
-- Proxy support
+- Supports both SOCKS4/5 and HTTP/S proxies
 - Frequent updates
 
 # Installation

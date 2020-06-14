@@ -3,12 +3,12 @@ Python module allowing for easy automated interaction with [ArkoseLabs FunCaptch
 
 Tested on: 2020-06-14
 
-## Things to note
+# Things to note
 - `.full_token` is the token you'll submit to the target website upon completing a challenge
 - Pillow's *.rotate* method is reversed, therefore you'll have to multiply the degree by -1 to get the image rotated correctly
 - Only the following user-agents are supported: `Google Chrome`, `Mozilla Firefox`
 
-## Setup
+# Setup
 ```bash
 sudo apt install nodejs
 pip3 install -r requirements.txt
@@ -16,7 +16,7 @@ pip3 install -r requirements.txt
 On Windows machines you'll also have to install the module `pycryptodome`
 
 
-## Usage
+# Usage
 ```python
 from py_funcaptcha import FunCaptchaSession
 from random import randint

@@ -27,6 +27,7 @@ On Windows machines you'll also have to install the module `pycryptodome`
 from py_funcaptcha import FunCaptchaSession
 from random import randint
 
+
 ## Create session for Roblox.com's login endpoint
 s = FunCaptchaSession(
     public_key="9F35E182-C93C-EBCC-A31D-CF8ED317B996",
@@ -37,10 +38,12 @@ s = FunCaptchaSession(
 ## Obtain a new challenge
 ch = s.create_challenge()
 
+
 ## Print some challenge details
 print("Full Token:", ch.full_token)
 print("Degree per rotation:", ch.angle)
 print("Number of images:", ch.get_image_count())
+
 
 ## Iterate over challenge images (Pillow)
 for image, submit in ch.get_iter():

@@ -436,7 +436,7 @@ class FunCaptchaSession:
             ## Depth
             "D:24",
             ## Pixel ratio
-            "PR:1.100000023841858",
+            "PR:1",
             ## Screen resolution
             "S:1920,1080",
             ## Available screen resolution (browser window size)
@@ -452,7 +452,7 @@ class FunCaptchaSession:
             ## .addBehaviour enabled - https://docs.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/ms535922(v%3Dvs.85)
             "B:false",
             ## OpenDB enabled
-            "ODB:true",
+            "ODB:" + ("true" if self.browser == "chrome" else "false"),
             ## CPU class
             "CPUC:unknown",
             ## Platform key

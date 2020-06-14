@@ -25,7 +25,8 @@ s = FunCaptchaSession(
     public_key="9F35E182-C93C-EBCC-A31D-CF8ED317B996",
     service_url="https://roblox-api.arkoselabs.com",
     page_url="https://www.roblox.com/login",
-    #proxy="https://127.0.0.1:3128"
+    #proxy="https://127.0.0.1:3128",
+    #timeout=15
     )
     
 ## Obtain a new challenge

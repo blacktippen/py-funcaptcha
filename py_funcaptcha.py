@@ -14,7 +14,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from PIL import Image
 from io import BytesIO
 ## Modules for encryption and decryption
-import execjs
+import mmh3
 from Crypto.Cipher import AES
 import base64
 import hashlib
@@ -29,11 +29,6 @@ USER_AGENTS = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0"
 ]
-
-
-## Load .js module for murmur3 related functions (used in BDA/fingerprint2 generation)
-with open("fp.js") as f:
-    mm3js = execjs.compile(f.read())
 
 
 ## Create dict of fields from full token string
@@ -480,7 +475,7 @@ class FunCaptchaSession:
         ## Calculate hashes
         ## I haven't managed to replicate fp hashes yet, so it's just filled with a random value for now
         fp = secrets.token_hex(16)
-        ife_hash = mm3js.call("x64hash128", ", ".join(fe), 38)
+        ife_hash = mmh3.hash_bytes(", ".join(fe), 38).hex() ##mm3js.call("x64hash128", ", ".join(fe), 38)
 
         ## Window hash + Window protochain
         wh = secrets.token_hex(16) + "|" + get_window_protochain_hash(self.browser)

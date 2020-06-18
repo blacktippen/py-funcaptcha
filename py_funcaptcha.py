@@ -283,13 +283,12 @@ class FunCaptchaChallenge():
 
     ## Submit guesses
     def submit_guesses(self, guesses: list) -> (bool, None):
-        data = ",".join(map(lambda x: "{:.2f}".format(x), guesses))
+        data = ",".join(map("{:.2f}".format, guesses))
         encrypted_data = cryptojs_encrypt(data, self.session_token)
 
+        self.update_metadata(origin="guess")
         if len(guesses) == len(self.image_urls):
             self.update_metadata(origin="lastguess", value=guesses[-1])
-        else:
-            self.update_metadata(origin="guess")
         
         ts = get_timestamp()
         sg_resp = self.session.r.post(

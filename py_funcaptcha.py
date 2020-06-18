@@ -1,6 +1,6 @@
 ## py_funcaptcha
 ## https://github.com/davidbaszucki/py-funcaptcha
-## Updated: 2020-06-14
+## Updated: 2020-06-18
 ## Contact: @h0nde
 
 

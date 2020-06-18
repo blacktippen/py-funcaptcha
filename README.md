@@ -12,7 +12,6 @@ Tested on: 2020-06-14
 
 # Installation
 ```bash
-sudo apt install nodejs
 pip3 install -r requirements.txt
 ```
 On Windows machines you'll also have to install the module `pycryptodome`

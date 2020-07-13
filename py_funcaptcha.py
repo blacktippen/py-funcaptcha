@@ -19,16 +19,37 @@ from Crypto.Cipher import AES
 import base64
 import hashlib
 import json
+import execjs
 import string
 import re
 import secrets
 
+with open("fp.js") as f:
+    mm3js = execjs.compile(f.read())
 
 ## Default params
 USER_AGENTS = [
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0"
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36",
+    #"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101 Firefox/78.0"
 ]
+
+## Root encryption keys for certain endpoints
+keys = {
+    "setupChallenge": "e1195fb20c24c57fe10b6344e491712c9", ## message(G9ii).N2r
+    "checkAnswer": "e7f17dfd538950feb86db852866355fd4", ## self(G9ii).k3R(325)
+    "getEncryptionKey": "e0845bd2f28b346f17342add88380d5f7", ## Z6K(G9ii).k3R(617)
+    "keepAlive": "ef010a06aced43965476da87e88d5cebc", ## t6K(G9ii).k3R(128)
+    "sendAnalytics": "ea5367c13f2c947113d7b9690968846fd", ## node(G9ii).k3R(565)
+}
+
+## Query keys for certain endpoints
+param_keys = {
+    "setupChallenge": "ed166c47957e04fb333d6176d0f5bdcd4",
+    "checkAnswer": "e655b8492aa3fa2a4d470d4dd152e2ed2",
+    "getEncryptionKey": "e5c0abde3c09cdd7042d2eba69739fe8d",
+    "keepAlive": "e07d86bcac2e4e5a3b18750a4bc13fe1f",
+    "sendAnalytics": "e3083a3db8645f38d1b2cfa0ad264a276"
+}
 
 
 ## Create dict of fields from full token string
@@ -183,8 +204,10 @@ class FunCaptchaChallenge():
     
     ## Set up challenge object
     def __init__(self, session: str, bda: str, full_token: str,
-                 session_token: str, region: str, lang: str, analytics_tier: str):
+                 session_token: str, region: str, lang: str, analytics_tier: str,
+                 scl: (None, int)):
         self.session = session
+        self.scl = scl
         self.proxy = self.session.proxy
         self.bda = bda
         self.full_token = full_token
@@ -196,29 +219,106 @@ class FunCaptchaChallenge():
         self.reload(status="init")
 
     
+    def encrypt_query(self, data, source):
+        ## calculate key for root
+        key = "secure" + keys[source] + "mode"
+
+        ## calculate key for the inner data
+        if source == "setupChallenge":
+            data_key = "init" + self.session_token + "key"
+
+        elif source == "sendAnalytics":
+            data_key = "analytical" + self.session_token + "key"
+
+        elif source == "checkAnswer":
+            data_key = "cat" + self.session_token + "key"
+
+        elif source == "getEncryptionKey":
+            data_key = "timed" + self.session_token + "key"
+
+        elif source == "keepAlive":
+            data_key = "rekey" + self.session_token + "key"
+        
+        data_key = "secure" + data_key + "mode"
+
+        d = cryptojs_encrypt(json.dumps({
+            "token": self.session_token,
+            "data": cryptojs_encrypt(json.dumps(data), data_key)
+        }), key)
+
+        return {param_keys[source]: d}
+
+
+    def decrypt_resp(self, data, source):
+        if source == "setupChallenge":
+            key = "init_return" + self.session_token
+        
+        elif source == "checkAnswer":
+            key = "ca_reply" + self.session_token
+        
+        elif source == "getEncryptionKey":
+            key = "ekey_reply" + self.session_token
+
+        d = cryptojs_decrypt(data, key) \
+            .rpartition(b"}")[0] + b"}"
+        return json.loads(d)
+    
+
     ## Reload the challenge
     def reload(self, status: str):
         ts = get_timestamp()
-        r_resp = self.session.r.post(
-            url=f"{self.session.service_url}/fc/gfct/",
+        r = self.session.r.get(
+            url=f"{self.session.service_url}/fc/gc/?token=" + self.full_token.replace("|", "&"),
             headers={
                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                 "cache-control": "no-cache",
-                "X-NewRelic-Timestamp": ts,
-                "X-Requested-With": "XMLHttpRequest",
-                "X-Requested-ID": self.get_request_id(),
                 **self.session.get_additional_browser_headers(),
-                "Origin": self.session.service_url, 
-                "Referer": self.session.service_url + "/fc/gc"},
-            cookies={
-                "timestamp": ts},
-            data={
+                "Upgrade-Insecure-Requests": "1",
+                "Referer": self.session.service_url + "/fc/gc/?token=" + self.full_token.replace("|", "&")})
+
+        if self.scl:
+            data = {
+                "token": self.session_token,
+                "sid": self.region,
+                "analytics_tier": self.analytics_tier,
+                "lang": self.lang,
+                "data": {"status": status},
+                "render_type": "canvas",
+                "id_sec_cl": self.session_token
+            }
+        else:
+            data = {
                 "analytics_tier": self.analytics_tier,
                 "render_type": "canvas",
                 "lang": self.lang,
                 "sid": self.region,
                 "token": self.session_token,
-                "data[status]": status}).json()
+                "data[status]": status}
+            
+        if self.scl:
+            data = self.encrypt_query(data, "setupChallenge")
+
+        r_resp = self.session.r.post(
+            url=f"{self.session.service_url}/fc/gfct/",
+            headers={
+                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                "Cache-Control": "no-cache",
+                "Pragma": "no-cache",
+                "X-NewRelic-Timestamp": ts,
+                "X-Requested-With": "XMLHttpRequest",
+                "X-Requested-ID": self.get_request_id(),
+                **self.session.get_additional_browser_headers(),
+                "Origin": self.session.service_url, 
+                "Referer": self.session.service_url + "/fc/gc/?token=" + self.full_token.replace("|", "&")},
+            cookies={
+                "timestamp": ts},
+            data=data)
+        
+        if self.scl:
+            r_resp = self.decrypt_resp(r_resp.text, "setupChallenge")
+        
+        else:
+            r_resp = r_resp.json()
 
         self.metadata = {}
         self.token = r_resp["challengeID"]
@@ -262,6 +362,9 @@ class FunCaptchaChallenge():
     ## Send analytics logging request
     def send_analytics(self, **kwargs) -> bool:
         ts = get_timestamp()
+        data = {**kwargs}
+        if self.scl:
+            data = self.encrypt_query(data, "sendAnalytics")
         an_resp = self.session.r.post(
             url=f"{self.session.service_url}/fc/a/",
             headers={
@@ -275,8 +378,12 @@ class FunCaptchaChallenge():
                 "Referer": self.session.service_url + "/fc/gc"},
             cookies={
                 "timestamp": ts},
-            data={
-                **kwargs}).json()
+            data=data)
+        
+        if self.scl:
+            an_resp = {"logged": True} ##self.decrypt_resp(an_resp.text, "sendAnalytics")
+        else:
+            an_resp = an_resp.json()
 
         return an_resp.get("logged")
     
@@ -289,6 +396,25 @@ class FunCaptchaChallenge():
         self.update_metadata(origin="guess")
         if len(guesses) == len(self.image_urls):
             self.update_metadata(origin="lastguess", value=guesses[-1])
+
+        if self.scl:
+            data = {
+                "sid": self.region,
+                "session_token": self.session_token,
+                "game_token": self.token,
+                "guess": encrypted_data,
+                "analytics_tier": self.analytics_tier,
+                "sec_id": self.session_token}
+        else:
+            data = {
+                "game_token": self.token,
+                "session_token": self.session_token,
+                "sid": self.region,
+                "guess": encrypted_data,
+                "analytics_tier": self.analytics_tier}
+        
+        if self.scl:
+            data = self.encrypt_query(data, "checkAnswer")
         
         ts = get_timestamp()
         sg_resp = self.session.r.post(
@@ -304,12 +430,12 @@ class FunCaptchaChallenge():
                 "Referer": self.session.service_url + "/fc/gc"},
             cookies={
                 "timestamp": ts},
-            data={
-                "game_token": self.token,
-                "session_token": self.session_token,
-                "sid": self.region,
-                "guess": encrypted_data,
-                "analytics_tier": self.analytics_tier}).json()
+            data=data)
+
+        if self.scl:
+            sg_resp = self.decrypt_resp(sg_resp.json()["data"], "checkAnswer")
+        else:
+            sg_resp = sg_resp.json()
         
         ## Update encryption key if response contains one
         if "decryption_key" in sg_resp:
@@ -332,6 +458,14 @@ class FunCaptchaChallenge():
     def get_encryption_key(self) -> str:
         self.update_metadata(origin="ekey")
 
+        data = {
+                "game_token": self.token,
+                "sid": self.region,
+                "session_token": self.session_token}
+        
+        if self.scl:
+            data = self.encrypt_query(data, "getEncryptionKey")
+
         ts = get_timestamp()
         ek_resp = self.session.r.post(
             url=f"{self.session.service_url}/fc/ekey/",
@@ -346,10 +480,12 @@ class FunCaptchaChallenge():
                 "Referer": f"{self.session.service_url}/fc/gc"},
             cookies={
                 "timestamp": ts},
-            data={
-                "game_token": self.token,
-                "sid": self.region,
-                "session_token": self.session_token}).json()
+            data=data)
+        
+        if self.scl:
+            ek_resp = self.decrypt_resp(ek_resp.json()["data"], "getEncryptionKey")
+        else:
+            ek_resp = ek_resp.json()
         
         return ek_resp["decryption_key"]
     
@@ -405,7 +541,7 @@ class FunCaptchaSession:
         self.r.timeout = timeout
         self.r.headers["User-Agent"] = self.user_agent
         self.r.headers["Accept"] = "*/*"
-        self.r.headers["Accept-Language"] = "en-US,en;q=0.5"
+        self.r.headers["Accept-Language"] = "en-US,en;q=0.9"
         self.r.headers["Accept-Encoding"] = "gzip, deflate, br"
 
         ## Disable SSL validation (for debugging)
@@ -474,7 +610,7 @@ class FunCaptchaSession:
         ## Calculate hashes
         ## I haven't managed to replicate fp hashes yet, so it's just filled with a random value for now
         fp = secrets.token_hex(16)
-        ife_hash = mmh3.hash_bytes(", ".join(fe), 38).hex() ##mm3js.call("x64hash128", ", ".join(fe), 38)
+        ife_hash = mm3js.call("x64hash128", ", ".join(fe), 38)
 
         ## Window hash + Window protochain
         wh = secrets.token_hex(16) + "|" + get_window_protochain_hash(self.browser)
@@ -485,13 +621,13 @@ class FunCaptchaSession:
         
         ## BDA Data
         data.append({"key": "api_type", "value": "js"})
-        data.append({"key": "p", "value": 1})
+        data.append({"value": 1, "key": "p"})
         data.append({"key": "f", "value": fp})
         data.append({"key": "n", "value": base64.b64encode(str(int(ts)).encode("utf-8")).decode("utf-8")})
         data.append({"key": "wh", "value": wh})
-        data.append({"value": fe, "key": "fe"}) ## Yes, this is intentional
+        data.append({"value": fe, "key": "fe"})
         data.append({"key": "ife_hash", "value": ife_hash})
-        data.append({"key": "cs", "value": 1})
+        data.append({"value": 1, "key": "cs"})
         data.append({"key": "jsbd", "value": jsbd})
     
         ## Calculate encryption key
@@ -507,10 +643,10 @@ class FunCaptchaSession:
 
     ## Browsers often have unique headers of their own. This function
     ## aims to include those headers depending on the user agent.
-    def get_additional_browser_headers(self) -> dict:
+    def get_additional_browser_headers(self, dirx="same-origin") -> dict:
         if self.browser == "chrome":
             return {
-                "Sec-Fetch-Site": "same-origin",
+                "Sec-Fetch-Site": dirx,
                 "Sec-Fetch-Mode": "cors",
                 "Sec-Fetch-Dest": "empty"}
         
@@ -528,9 +664,11 @@ class FunCaptchaSession:
         nc_resp = self.r.post(
             url=f"{self.service_url}/fc/gt2/public_key/{self.public_key}",
             headers={
+                "Cache-Control": "no-cache",
+                "Pragma": "no-cache",
                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                 "Origin": self.site_url,
-                **self.get_additional_browser_headers(),
+                **self.get_additional_browser_headers("cross-site"),
                 "Referer": self.page_url},
             data={
                 "bda": bda,
@@ -541,6 +679,7 @@ class FunCaptchaSession:
                 "simulated": 0,
                 "language": "en",
                 "rnd": rnd}).json()
+        
 
         ## Create FunCaptchaChallenge object based on data
         ## returned by /fc/gc/public_key/{pk}
@@ -553,4 +692,5 @@ class FunCaptchaSession:
             session_token=data["token"],
             region=data["r"],
             lang=data["lang"],
-            analytics_tier=int(data["at"]))
+            analytics_tier=int(data["at"]),
+            scl="scl" in data and int(data["scl"]))

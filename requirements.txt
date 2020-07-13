@@ -2,3 +2,4 @@ pillow
 mmh3
 requests
 httpagentparser
+pyexecjs

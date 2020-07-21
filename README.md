@@ -1,8 +1,7 @@
 # py-funcaptcha
 Python3 module allowing for easy automated interaction with [ArkoseLabs FunCaptcha](https://www.arkoselabs.com/technology/#ArkoseEnforce).
 
-Note: Currently not compatible with game-mode 3
-Tested on: 2020-07-21
+Currently not compatible with gamemode 3. Tested on: 2020-07-21
 
 # Features
 - Does not use Selenium or any other browser automation tool

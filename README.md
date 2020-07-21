@@ -1,5 +1,5 @@
 # py-funcaptcha
-Python3 module allowing for easy automated interaction with [ArkoseLabs FunCaptcha](https://medium.com/arkoselabs/funcaptcha-security-verification-for-people-of-all-abilities-c2f9a0ba73df).
+Python3 module allowing for easy automated interaction with [ArkoseLabs FunCaptcha](https://www.arkoselabs.com/technology/#ArkoseEnforce).
 
 Tested on: 2020-07-13
 

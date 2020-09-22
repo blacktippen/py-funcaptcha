@@ -8,6 +8,11 @@ Python3 wrapper for `ArkoseLabs FunCaptcha`'s client with precise browser reques
 - Solving and submitting tokens with the same IP address is necessary on most websites
 - Challenges can be reused once, just call `.check_answer()` with no parameters and the token will work once again
 
+# Setup
+```bash
+$ pip install -r requirements.txt
+```
+
 # GameType 3 Example
 ```python
 from funcaptcha import Session, load_profiles, tile_num_to_location

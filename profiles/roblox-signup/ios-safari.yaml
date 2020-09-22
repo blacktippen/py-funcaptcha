@@ -1,0 +1,259 @@
+name: iOS Safari
+user_agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.2 Mobile/15E148 Safari/604.1
+protochain_hash: 1d99c2530fa1a96e676f9b1a1a9bcb58
+json_settings:
+  separators: [',', ':']
+
+jsbd: "\"HL\":5,\"NCE\":true,\"DT\":\"{window_title}\",\"NWD\":\"false\",\"DMTO\":1,\"DOTO\":1"
+
+fe:
+  - DNT:unknown
+  - L:en-us
+  - D:32
+  - PR:3
+  - S:896,414
+  - AS:896,414
+  - "TO:{timezone_offset}"
+  - SS:true
+  - LS:true
+  - IDB:true
+  - B:false
+  - ODB:false
+  - CPUC:unknown
+  - PK:iPhone
+  - "CFP:{canvas_fingerprint}"
+  - FR:false
+  - FOS:false
+  - FB:false
+  - JSF:Arial,Arial Hebrew,Arial Rounded MT Bold,Courier,Courier New,Georgia,Helvetica,Helvetica Neue,Palatino,Times,Times New Roman,Trebuchet MS,Verdana
+  - "P:"
+  - T:5,true,true
+  - H:unknown
+  - SWF:false
+
+url_encoding_map:
+  "/": "%2F"
+  '+': "%2B"
+  " ": "%20"
+  ";": "%3B"
+  ",": "%2C"
+  ":": "%3A"
+  "{": "%7B"
+  "}": "%7D"
+  '"': "%22"
+  "[": "%5B"
+  "]": "%5D"
+
+window:
+  title: Roblox
+  url: https://www.roblox.com/login
+
+requests:
+
+  get_session:
+    method: POST
+    url: "{service_url}/fc/gt2/public_key/{public_key}"
+    url_encoding: default
+    
+    headers:
+      Host: "{service_host}"
+      Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+      Origin: "{window_url_nopath}"
+      Accept-Encoding: gzip, deflate, br
+      Connection: keep-alive
+      Accept: "*/*"
+      User-Agent: "{user_agent}"
+      Referer: "{window_url_nopath}/"
+      Content-Length: "{payload_length}"
+      Accept-Language: en-us
+    
+    body:
+      bda: "{bda}"
+      public_key: "{public_key}"
+      site: "{window_url_nopath}"
+      userbrowser: "{user_agent}"
+      simulate_rate_limit: 0
+      simulated: 0
+      language: en
+      rnd: "{random_float}"
+
+
+
+  site_url_analytics:
+    method: POST
+    url: "{service_url}/fc/a/"
+    url_encoding: plus
+    
+    headers:
+      Host: "{service_host}"
+      Accept: "*/*"
+      X-Requested-With: XMLHttpRequest
+      Accept-Language: en-us
+      Cache-Control: no-cache
+      Accept-Encoding: gzip, deflate, br
+      Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+      Origin: "{service_url_nopath}"
+      Content-Length: "{payload_length}"
+      User-Agent: "{user_agent}"
+      X-NewRelic-Timestamp: "{timestamp}"
+      Referer: "{service_url_nopath}/"
+      X-Requested-ID: "{tracking}"
+      Connection: keep-alive
+
+    body:
+      session_token: "{session_token}"
+      render_type: canvas
+      category: Site URL
+      analytics_tier: 40
+      action: "{window_url_nopath}"
+      sid: "{region}"
+    
+
+  game_loaded_analytics:
+    method: POST
+    url: "{service_url}/fc/a/"
+    url_encoding: plus
+    
+    headers:
+      Host: "{service_host}"
+      Accept: "*/*"
+      X-Requested-With: XMLHttpRequest
+      Accept-Language: en-us
+      Cache-Control: no-cache
+      Accept-Encoding: gzip, deflate, br
+      Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+      Origin: "{service_url_nopath}"
+      Content-Length: "{payload_length}"
+      User-Agent: "{user_agent}"
+      X-NewRelic-Timestamp: "{timestamp}"
+      Referer: "{service_url_nopath}/"
+      X-Requested-ID: "{tracking}"
+      Connection: keep-alive
+
+    body:
+      session_token: "{session_token}"
+      render_type: canvas
+      game_token: "{challenge_token}"
+      category: loaded
+      game_type: "{game_type}"
+      analytics_tier: 40
+      action: game loaded
+      sid: "{region}"
+
+
+  user_clicked_verify_analytics:
+    method: POST
+    url: "{service_url}/fc/a/"
+    url_encoding: plus
+    
+    headers:
+      Host: "{service_host}"
+      Accept: "*/*"
+      X-Requested-With: XMLHttpRequest
+      Accept-Language: en-us
+      Cache-Control: no-cache
+      Accept-Encoding: gzip, deflate, br
+      Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+      Origin: "{service_url_nopath}"
+      Content-Length: "{payload_length}"
+      User-Agent: "{user_agent}"
+      X-NewRelic-Timestamp: "{timestamp}"
+      Referer: "{service_url_nopath}/"
+      X-Requested-ID: "{tracking}"
+      Connection: keep-alive
+
+    body:
+      session_token: "{session_token}"
+      render_type: canvas
+      game_token: "{challenge_token}"
+      category: begin app
+      game_type: "{game_type}"
+      analytics_tier: 40
+      action: user clicked verify
+      sid: "{region}"
+
+
+  get_challenge:
+    method: POST
+    url: "{service_url}/fc/gfct/"
+    url_encoding: plus
+    
+    headers:
+      Host: "{service_host}"
+      Accept: "*/*"
+      X-Requested-With: XMLHttpRequest
+      Accept-Language: en-us
+      Cache-Control: no-cache
+      Accept-Encoding: gzip, deflate, br
+      Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+      Origin: "{service_url_nopath}"
+      Content-Length: "{payload_length}"
+      User-Agent: "{user_agent}"
+      X-NewRelic-Timestamp: "{timestamp}"
+      Referer: "{service_url_nopath}/"
+      X-Requested-ID: "{tracking}"
+      Connection: keep-alive
+    
+    body:
+      sid: "{region}"
+      token: "{session_token}"
+      analytics_tier: 40
+      data[status]: init
+      lang: en
+      render_type: canvas
+
+
+  get_encryption_key:
+    method: POST
+    url: "{service_url}/fc/ekey/"
+    url_encoding: plus
+    
+    headers:
+      Host: "{service_host}"
+      Accept: "*/*"
+      X-Requested-With: XMLHttpRequest
+      Accept-Language: en-us
+      Cache-Control: no-cache
+      Accept-Encoding: gzip, deflate, br
+      Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+      Origin: "{service_url_nopath}"
+      Content-Length: "{payload_length}"
+      User-Agent: "{user_agent}"
+      X-NewRelic-Timestamp: "{timestamp}"
+      Referer: "{service_url_nopath}/"
+      X-Requested-ID: "{tracking}"
+      Connection: keep-alive
+    
+    body:
+      session_token: "{session_token}"
+      sid: "{region}"
+      game_token: "{challenge_token}"
+
+
+  check_answer:
+    method: POST
+    url: "{service_url}/fc/ca/"
+    url_encoding: plus
+    
+    headers:
+      Host: "{service_host}"
+      Accept: "*/*"
+      X-Requested-With: XMLHttpRequest
+      Accept-Language: en-us
+      Cache-Control: no-cache
+      Accept-Encoding: gzip, deflate, br
+      Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+      Origin: "{service_url_nopath}"
+      Content-Length: "{payload_length}"
+      User-Agent: "{user_agent}"
+      X-NewRelic-Timestamp: "{timestamp}"
+      Referer: "{service_url_nopath}/"
+      X-Requested-ID: "{tracking}"
+      Connection: keep-alive
+    
+    body:
+      sid: "{region}"
+      game_token: "{challenge_token}"
+      session_token: "{session_token}"
+      guess: "{answer}"
+      analytics_tier: 40

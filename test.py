@@ -7,7 +7,7 @@ s = Session(
     public_key="9F35E182-C93C-EBCC-A31D-CF8ED317B996",
     service_url="https://roblox-api.arkoselabs.com",
     profile=profiles[0].new(),
-    manager=ProxyManager("http://localhost:8888")
+    #manager=ProxyManager("http://localhost:8888")
 )
 ch = s.get_challenge()
 

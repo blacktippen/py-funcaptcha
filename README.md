@@ -6,6 +6,7 @@ Python3 wrapper for `ArkoseLabs FunCaptcha`'s client with precise browser reques
 - Solving more than one challenge per session is not recommended, instead try re-using `PoolManager` objects for optimized performance
 - `session.full_token` is the token you'll submit to your target website
 - Solving and submitting tokens with the same IP address is necessary on most websites
+- Challenges can be reused once, just call `.check_answer()` with no parameters and the token will work once again
 
 # GameType 3 Example
 ```python

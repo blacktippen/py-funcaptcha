@@ -1,5 +1,5 @@
 # py-funcaptcha
-Python module for interacting with ArkoseLabs FunCaptcha, with full support for game-type 1 and 3.
+Python3 wrapper for ArkoseLabs FunCaptcha with advanced browser emulation, and support for gametype 1 and 3.
 
 # Things to note
 - The `manager` parameter of `Session` requires a `urllib3.PoolManager` or `urllib3.ProxyManager` object, you can learn more about it [here](https://urllib3.readthedocs.io/en/latest/advanced-usage.html)

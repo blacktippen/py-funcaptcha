@@ -2,3 +2,4 @@ js2py
 urllib3
 pycryptodome
 pillow
+pyyaml

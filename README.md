@@ -5,6 +5,7 @@ Python3 wrapper for `ArkoseLabs FunCaptcha`'s client with precise browser reques
 - The `manager` parameter of `Session` requires a `urllib3.PoolManager` or `urllib3.ProxyManager` object, you can learn more about it [here](https://urllib3.readthedocs.io/en/latest/advanced-usage.html)
 - Solving more than one challenge per session is not recommended, instead try re-using `PoolManager` objects for optimized performance
 - `session.full_token` is the token you'll submit to your target website
+- Solving and submitting tokens with the same IP address is necessary on most websites
 
 # GameType 3 Example
 ```python
